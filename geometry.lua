@@ -52,14 +52,16 @@ end
 -- Returns true if the two numbers are within 1 (or the given parameter) of each other
 -- returns false otherwise
 function isClose(a, b, closeness)
-	d = 1
-	if closeness then
-		d = closeness
-	end
+	d = closeness or 2
 
 	if math.abs(a - b) <= d then
 		return true
 	end
 
 	return false
+end
+
+-- Returns distance between two points
+function distance(x1, y1, x2, y2)
+	return math.sqrt(math.pow(x1-x2,2) + math.pow(y1-y2,2))
 end

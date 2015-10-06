@@ -29,9 +29,10 @@ function hero:draw()
 end
 
 function hero:update(dt)
-	self.dir = getAngle(self.x, self.y, love.mouse.getX(), love.mouse.getY())
+	mousex, mousey = love.mouse.getPosition()
+	self.dir = getAngle(self.x + tVec.x, self.y + tVec.y, mousex, mousey)
 
-	if love.mouse.isDown("l") then
+	if love.mouse.isDown("l") and not (isClose(self.x, mousex - tVec.x) and isClose(mousey - tVec.y, self.y)) then
 		self:move(self.speed*dt)
 	end
 

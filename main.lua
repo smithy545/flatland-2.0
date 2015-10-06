@@ -12,7 +12,7 @@ function love.load()
 	objects["cores"] = {}
 	-- Set up some zorps
 	for i=1,3 do
-		objects["zorps"][i] = zorp:new(0, 0, i + 2)
+		objects["zorps"][i] = zorp:new(200, i*200, i + 2)
 		objects["zorps"][i]:translate(50*i, 50*i)
 		objects["zorps"][i]:changeDir(60*i)
 	end
@@ -71,7 +71,7 @@ function love.draw()
 		core:draw()
 	end
 	-- Hero
-	objects["hero"]:draw()
+	objects.hero:draw()
 end
 
 function love.mousepressed(x, y, button)
@@ -97,14 +97,8 @@ end
 function love.keyreleased(key)
 	if(key == " ") then
 		love.mouse.setRelativeMode(not love.mouse.getRelativeMode())
-	end
-end
-
-function love.focus(f)
-	if not f then
-		print("LOST FOCUS")
-	else
-		print("GAINEDFOCUS")
+	elseif(key == "i") then
+		objects.hero.draw = function() end
 	end
 end
 

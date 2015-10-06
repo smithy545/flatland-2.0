@@ -54,11 +54,29 @@ function zorp:update(dt)
 end
 
 function zorp:think(dt)
-	if math.random() >= 0.7 then
-		self:move(1)
+	if self.core then
+		if self.core:isClose(self.x, self.y) then
+		else
+			self.dir = getAngle(self.x, self.y, self.core.x, self.core.y)
+			self:move(1)
+		end
+	else
+		local d
+		for i, core in ipairs(objects["cores"]) do
+			if d == nil or distance(core.x, core.y, self.x, self.y) < d then
+				d = distance(core.x, core.y, self.x, self.y)
+				self.core = core
+			end
+		end
 	end
-	if temp >= 0.05 then
+	--[[
+	if temp >= 0.04 then
 		local test = self.dir
-		self.dir = self.dir + math.rad(math.random()*math.random(-1, 1))
+		self.dir = self.dir + math.rad(5*math.random()*math.random(-1, 1))
 	end
+	]]--
+end
+
+function zorp:collide(x, y)
+	return true
 end
