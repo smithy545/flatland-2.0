@@ -12,10 +12,11 @@ end
 function buildRegPolygon(x, y, r, sides, direction)
 	local theta = direction % (2*math.pi)
 	local vertices = {}
-	for i=0,(2*math.pi),((2*math.pi)/sides) do
-		table.insert(vertices, math.floor(x + r*math.cos(theta + i)))
-		table.insert(vertices, math.floor(y + r*math.sin(theta + i)))
+	for i=0,sides - 1 do
+		table.insert(vertices, Vector.new(math.floor(x + r*math.cos(theta + i*(2*math.pi)/sides)),
+								math.floor(y + r*math.sin(theta + i*(2*math.pi)/sides))))
 	end
+
 	return vertices
 end
 
@@ -64,4 +65,15 @@ end
 -- Returns distance between two points
 function distance(x1, y1, x2, y2)
 	return math.sqrt(math.pow(x1-x2,2) + math.pow(y1-y2,2))
+end
+
+-- Returns the dot product of two vectors
+-- From rosettacode.org/wiki/Dot_product
+function dot(a, b)
+	local prod = 0
+	for i, aa in ipairs(a) do
+		prod = prod + aa * b[i]
+	end
+
+	return prod
 end

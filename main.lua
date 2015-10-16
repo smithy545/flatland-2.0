@@ -1,5 +1,6 @@
 function love.load()
 	require "class"
+	require "vector"
 	require "geometry"
 	require "zorp"
 	require "hero"
@@ -7,13 +8,13 @@ function love.load()
 
 	-- Set up objects lists
 	objects = {}
-	objects["hero"] = hero:new(0, 0, 3)
+	objects["hero"] = {hero:new(-200, 0, 3)}
 	objects["zorps"] = {}
 	objects["cores"] = {}
 	-- Set up some zorps
 	for i=1,3 do
-		objects["zorps"][i] = zorp:new(200, i*200, i + 2)
-		objects["zorps"][i]:translate(50*i, 50*i)
+		objects["zorps"][i] = zorp:new(300*math.cos(i*2*math.pi/3), 300*math.sin(i*2*math.pi/3), i + 2)
+		objects["zorps"][i]:translate(0, 0)
 		objects["zorps"][i]:changeDir(60*i)
 	end
 	-- Set up some cores
@@ -22,7 +23,7 @@ function love.load()
 	end
 
 	-- Other
-	love.mouse.setRelativeMode(false)
+	-- love.mouse.setCursor(love.mouse.newCursor(love.image.newImageData("maxresdefault.png")),0,0)
 	math.randomseed(os.time())
 	scrollSpeed = 200 							-- speed at which screen scrolls
 	tVec = {x = love.window.getWidth() / 2,
@@ -50,7 +51,7 @@ function love.update(dt)
 		v:update(dt)
 	end
 	-- Hero
-	objects["hero"]:update(dt)
+	objects["hero"][1]:update(dt)
 
 end
 
@@ -71,7 +72,7 @@ function love.draw()
 		core:draw()
 	end
 	-- Hero
-	objects.hero:draw()
+	objects["hero"][1]:draw()
 end
 
 function love.mousepressed(x, y, button)
@@ -99,6 +100,8 @@ function love.keyreleased(key)
 		love.mouse.setRelativeMode(not love.mouse.getRelativeMode())
 	elseif(key == "i") then
 		objects.hero.draw = function() end
+	elseif(key == "escape") then
+		love.event.quit()
 	end
 end
 

@@ -1,12 +1,13 @@
 hero = zorp:inherit()
 
 function hero:init(x, y, sides, irregular)
+	self.name = "hero"
 	self.anglesum = 180*(sides - 2)
 	self.regular = not irregular
 	self.angles = {}
 	self.x = x
 	self.y = y
-	self.size = 50						-- radius
+	self.r = 50						-- radius
 	self.dir = 0 						-- direction
 	self.n = sides 						-- number of sides
 	self.speed = 100						-- speed of travel
@@ -20,21 +21,36 @@ function hero:init(x, y, sides, irregular)
 			self.angles[i] = self.anglesum / sides
 		end
 	end
-	self.vertices = buildRegPolygon(self.x, self.y, self.size, self.n, self.dir)
+	self.vertices = buildRegPolygon(self.x, self.y, self.r, self.n, self.dir)
 end
 
 function hero:draw()
 	love.graphics.setColor(255, 69, 0)
-	love.graphics.polygon("fill", self.vertices)
+	local drawVerts = {}
+	for i, a in pairs(self.vertices) do
+		table.insert(drawVerts, a.x)
+		table.insert(drawVerts, a.y)
+	end
+	love.graphics.polygon("fill", drawVerts)
 end
 
 function hero:update(dt)
-	mousex, mousey = love.mouse.getPosition()
-	self.dir = getAngle(self.x + tVec.x, self.y + tVec.y, mousex, mousey)
+	mousex = (love.mouse.getX() - tVec.x) / scale
+	mousey = (love.mouse.getY() - tVec.y) / scale
 
-	if love.mouse.isDown("l") and not (isClose(self.x, mousex - tVec.x) and isClose(mousey - tVec.y, self.y)) then
+	self:setDir(getAngle(self.x, self.y, mousex, mousey))
+
+	if love.mouse.isDown("l") and not (isClose(self.x, mousex) and isClose(self.y, mousey)) then
 		self:move(self.speed*dt)
+	elseif love.mouse.isDown("r") then
+		self:move(-1*self.speed*dt)
 	end
 
-	self.vertices = buildRegPolygon(self.x, self.y, self.size, self.n, self.dir)
+	self.vertices = buildRegPolygon(self.x, self.y, self.r, self.n, self.dir)
+end
+
+function hero:setDir(phi)
+	if not self:checkPolyCollision(buildRegPolygon(self.x, self.y, self.r, self.n, phi), objects) then
+		self.dir = phi
+	end
 end
