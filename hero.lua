@@ -11,6 +11,7 @@ function hero:init(x, y, sides, irregular)
 	self.dir = 0 						-- direction
 	self.n = sides 						-- number of sides
 	self.speed = 100						-- speed of travel
+	self.core = {x=0,y=0,r=10}
 	if regular then
 		for i=1,5 do
 			self.angles[i] = self.anglesum / sides

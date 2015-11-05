@@ -2,6 +2,8 @@ function love.load()
 	require "class"
 	require "vector"
 	require "geometry"
+	require "utilities"
+	require "home"
 	require "zorp"
 	require "hero"
 	require "core"
@@ -11,15 +13,27 @@ function love.load()
 	objects["hero"] = {hero:new(-200, 0, 3)}
 	objects["zorps"] = {}
 	objects["cores"] = {}
+	objects["homes"] = {}
 	-- Set up some zorps
-	for i=1,3 do
-		objects["zorps"][i] = zorp:new(300*math.cos(i*2*math.pi/3), 300*math.sin(i*2*math.pi/3), i + 2)
-		objects["zorps"][i]:translate(0, 0)
-		objects["zorps"][i]:changeDir(60*i)
-	end
-	-- Set up some cores
-	for i=1,1 do
-		objects["cores"][i] = core:new(0,0)
+	for i, filename in ipairs(love.filesystem.getDirectoryItems("zorps/")) do
+		local cx, cy
+		coreTaken = true
+		while coreTaken do
+			cx, cy = math.random(0,400), math.random(0,400)
+			coreTaken = false
+			for i, c in ipairs(objects["cores"]) do
+				if c.collide(cx, cy) then
+					coreTaken = true
+				end
+			end
+		end
+		objects["cores"][i] = core:new(cx, cy)
+		local zsides = math.random(1,3) + math.random(1,3) + math.random(1,3)
+		for j=1,3 do
+			objects["zorps"][j] = zorp:new(cx + 10*objects["cores"][i].r*math.cos(j*math.pi*2/3), cy + 10*objects["cores"][i].r*math.sin(j*math.pi*2/3), zsides)
+			objects["zorps"][j].think = loadfile("lua_game/zorps/" .. filename)()
+			objects["zorps"][j].name = tostring(j)
+		end
 	end
 
 	-- Other
@@ -63,16 +77,11 @@ function love.draw()
 	love.graphics.translate(tVec.x, tVec.y)
 	love.graphics.scale(scale)
 
-	-- Zorps
-	for i, zorp in ipairs(objects["zorps"]) do
-		zorp:draw()
+	for objectName, objectType in pairs(objects) do
+		for i, object in ipairs(objectType) do
+			object:draw()
+		end
 	end
-	-- Cores
-	for i, core in ipairs(objects["cores"]) do
-		core:draw()
-	end
-	-- Hero
-	objects["hero"][1]:draw()
 end
 
 function love.mousepressed(x, y, button)

@@ -1,18 +1,20 @@
 zorp = class:new()
 
-local temp = 0
-
 function zorp:init(x, y, sides, irregular)
 	self.name = "zorp"
 	self.anglesum = 180*(sides - 2)
 	self.regular = not irregular
 	self.angles = {}
-	self.speed = 10
+	self.speed = 100
+	self.hp = 25
 	self.x = x
 	self.y = y
-	self.r = 50							-- radius
+	self.r = 25							-- radius
 	self.dir = 0 						-- direction
 	self.n = sides 						-- number of sides
+	self.charging = false
+	self.queue = Queue:new()
+	self.color = {r = 70, g = 130, b = 180}
 	if regular then
 		for i=1,5 do
 			self.angles[i] = self.anglesum / sides
@@ -27,7 +29,9 @@ function zorp:init(x, y, sides, irregular)
 end
 
 function zorp:draw()
-	love.graphics.setColor(70,130,180)
+	love.graphics.setColor(self.color.r + (1-self.hp/100)*(128-self.color.r),
+						   self.color.g + (1-self.hp/100)*(128-self.color.r),
+						   self.color.b + (1-self.hp/100)*(128-self.color.r))
 	local drawVerts = {}
 	for i, a in pairs(self.vertices) do
 		table.insert(drawVerts, a.x)
@@ -46,12 +50,33 @@ function zorp:translate(dx, dy)
 end
 
 function zorp:move(d)
-	local x = self.x + d*math.cos(self.dir)
-	local y = self.y + d*math.sin(self.dir)
-	if not self:checkPolyCollision(buildRegPolygon(x, y, self.r, self.n, self.dir), objects) then
-		self.x = x -- self.r * math.cos(self.dir)
-		self.y = y -- self.r * math.sin(self.dir)
+	local x = self.x + (d + self.r)*math.cos(self.dir)
+	local y = self.y + (d + self.r)*math.sin(self.dir)
+	if not self:checkCollision(x, y, objects) then
+		self.x = x - self.r * math.cos(self.dir)
+		self.y = y - self.r * math.sin(self.dir)
 	end
+end
+
+function zorp:moveFree(d)
+	self.x = self.x + d*math.cos(self.dir)
+	self.y = self.y + d*math.sin(self.dir)
+end
+
+function zorp:path(x, y)
+	
+end
+
+function zorp:moveTo(x, y)
+	self.queue:pushRight({key = "moveTo", x = x, y = y, dir = getAngle(self.x, self.y, x, y)})
+end
+
+function zorp:moveTowards(x, y, r)
+	self.queue:pushRight({key = "moveTowards", x = x, y = y, r = r, dir = getAngle(self.x, self.y, x, y)})
+end
+
+function zorp:charge()
+	self.queue:pushRight({key = "charge"})
 end
 
 function zorp:changeDir(theta)
@@ -60,70 +85,74 @@ end
 
 -- This is basically the same as changeDir but with collision detection
 function zorp:turn(theta)
-	local x = self.x + self.r*math.cos(self.dir + theta)
-	local y = self.y + self.r*math.sin(self.dir + theta)
-	if self:checkPolyCollision(buildRegPolygon(x, y, self.r, self.n, self.dir + theta), objects) then
+	if not self:checkPolyCollision(buildRegPolygon(self.x, self.y, self.r, self.n, self.dir + theta), objects) then
 		self:changeDir(theta)
 	end
 end
 
 function zorp:update(dt)
-	temp = temp + dt
-	self:think(temp)
-	if temp > 0.1 then
-		temp = 0
+	local item = self.queue:peekRight()
+	if not item then
+		self:think(dt)
+	elseif item["key"] == "moveTo" then
+		if item.dir < self.dir and (self.dir - item.dir) > dt then
+			self:turn(-dt)
+		elseif item.dir > self.dir and (item.dir - self.dir) > dt then
+			self:turn(dt)
+		else
+			if distance(self.x, self.y, item.x, item.y) > 2*self.speed*dt then
+				self:move(self.speed*dt)
+			else
+				self.queue:popRight()
+			end
+		end
+	elseif item["key"] == "moveTowards" then
+		if item.dir < self.dir and (self.dir - item.dir) > dt then
+			self:turn(-dt)
+		elseif item.dir > self.dir and (item.dir - self.dir) > dt then
+			self:turn(dt)
+		else
+			if distance(self.x, self.y, item.x, item.y) > item.r + self.r + self.speed*dt then
+				self:move(self.speed*dt)
+			else
+				self.queue:popRight()
+			end
+		end
+	elseif item["key"] == "pathTo" then
+		
+	elseif item["key"] == "charge" then
+		self.hp = self.hp + 10*dt
+		if self.hp >= 100 then
+			self.hp = 100
+			self.queue:popRight()
+		end
+	elseif item["key"] == "buildHome" then
+		if distance(self.x, self.y, self.home.x, self.home.y) > 2*self.speed*dt then
+			self:goHome()
+		elseif checkPolyCollisions(self.home.vertices, objects) then
+			self:buildHome()
+		else
+			table.insert(objects["homes"], self.home)
+			self.queue:popRight()
+		end
 	end
 
 	self.vertices = self:buildVerts()
 end
 
 function zorp:think(dt)
-	if not self.core then
-		local d
-		for i, core in ipairs(objects["cores"]) do
-			if d == nil or distance(core.x, core.y, self.x, self.y) < d then
-				d = distance(core.x, core.y, self.x, self.y)
-				self.core = core
-				table.insert(core.zorps, self)
-			end
-		end
-	end
-
-	if distance(self.x, self.y, self.core.x, self.core.y) > 100 then
-		self.dir = getAngle(self.x, self.y, self.core.x, self.core.y)
-		self:move(self.speed*dt)
-	else
-
-	end
 
 end
 
 -- Checks if the point is in the zorp
 -- Using Barycentric method from blackpawn.com
 function zorp:collide(x, y)
-	local v = self.vertices
 	if self.n == 3 then
-		local d00, d01, d02, d11, d12, v0, v1, v2
-		v0 = v[3] - v[1]
-		v1 = v[2] - v[1]
-		v2 = Vector.new(x,y) - v[1]
-		d00 = v0:dot(v0)
-		d01 = v0:dot(v1)
-		d02 = v0:dot(v2)
-		d11 = v1:dot(v1)
-		d12 = v1:dot(v2)
-
-		local invDenom = 1 / (d00 * d11 - d01 * d01)
-		local u = (d11 * d02 - d01 * d12) * invDenom
-		local v = (d00 * d12 - d01 * d02) * invDenom
-
-		return (u >= 0) and (v >= 0) and (u + v < 1)
+		return checkPointTriangle(x, y, self.vertices)
+	elseif self.n == 4 then
+		return checkPointSquare(x, y, self.x, self.y, self.r)
 	else
-		if distance(self.x, self.y, x, y) <= self.r then
-			return true
-		else
-			return false
-		end
+		return checkPointCircle(x, y, self.x, self.y, self.r)
 	end
 end
 
@@ -131,18 +160,6 @@ function zorp:collidePoly(vertices, object)
 	for i, v in ipairs(vertices) do
 		if object:collide(v.x, v.y) then
 			return true
-		end
-	end
-
-	return false
-end
-
-function zorp:checkPointCollision(x, y, objects)
-	for i, objectType in pairs(objects) do
-		for j, object in ipairs(objectType) do
-			if object ~= self and object:collide(x, y) then
-				return true
-			end
 		end
 	end
 
@@ -161,6 +178,18 @@ function zorp:checkPolyCollision(vertices, objects)
 	return false
 end
 
+function zorp:checkCollision(x, y, objects)
+	for i, objectType in pairs(objects) do
+		for j, object in ipairs(objectType) do
+			if object ~= self and object:collide(x, y) then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
 function zorp:buildVerts()
 	local theta = self.dir % (2*math.pi)
 	local vertices = {}
@@ -170,4 +199,24 @@ function zorp:buildVerts()
 	end
 
 	return vertices
+end
+
+function zorp:buildHome()
+	local x, y
+	x = self.core.x + (2*math.random(0,1)-1)*self.core.r*(2 + 2*math.random())
+	y = self.core.y + (2*math.random(0,1)-1)*self.core.r*(2 + 2*math.random())
+	while checkPolyCollisions(buildRegPolygon(x, y, self.r*2, 5, getAngle(x, y, self.core.x, self.core.y)), objects) do
+		x = self.core.x + (2*math.random(0,1)-1)*self.core.r*(2 + 2*math.random())
+		y = self.core.y + (2*math.random(0,1)-1)*self.core.r*(2 + 2*math.random())
+	end
+	
+	self.home = home:new(x, y, self.r*3)
+	local home = self.home
+	self.home.vertices = buildRegPolygon(home.x, home.y, home.r, 5, getAngle(home.x, home.y, self.core.x, self.core.y))
+	self:goHome()
+	self.queue:pushRight({key = "buildHome", home = self.home})
+end
+
+function zorp:goHome()
+	self:moveTo(self.home.x, self.home.y)
 end

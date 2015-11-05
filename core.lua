@@ -2,7 +2,7 @@ core = class:new()
 
 function core:init(x, y, colori, coloro)
 	self.name = "core"
-	self.r = 100
+	self.r = 50
 	self.x = x
 	self.y = y
 	self.colori = colori or {0, 76, 153}
@@ -34,9 +34,5 @@ function core:isClose(x, y)
 end
 
 function core:collide(x, y)
-	if distance(x, y, self.x, self.y) <= self.r then
-		return true
-	end
-
-	return false
+	return checkPointCircle(x, y, self.x, self.y, self.r)
 end
