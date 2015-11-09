@@ -42,6 +42,7 @@ function zorp:draw()
 	if self.n > 3 then
 		love.graphics.circle("line", self.x, self.y, self.r)
 	end
+
 end
 
 function zorp:translate(dx, dy)
@@ -65,6 +66,10 @@ end
 
 function zorp:path(x, y)
 	
+end
+
+function zorp:emptyQueue()
+	self.queue = Queue:new()
 end
 
 function zorp:moveTo(x, y)
@@ -96,12 +101,12 @@ function zorp:update(dt)
 		self:think(dt)
 	elseif item["key"] == "moveTo" then
 		if item.dir < self.dir and (self.dir - item.dir) > dt then
-			self:turn(-dt)
+			self:changeDir(-dt)
 		elseif item.dir > self.dir and (item.dir - self.dir) > dt then
-			self:turn(dt)
+			self:changeDir(dt)
 		else
 			if distance(self.x, self.y, item.x, item.y) > 2*self.speed*dt then
-				self:move(self.speed*dt)
+				self:moveFree(self.speed*dt)
 			else
 				self.queue:popRight()
 			end
@@ -127,14 +132,20 @@ function zorp:update(dt)
 			self.queue:popRight()
 		end
 	elseif item["key"] == "buildHome" then
-		if distance(self.x, self.y, self.home.x, self.home.y) > 2*self.speed*dt then
-			self:goHome()
-		elseif checkPolyCollisions(self.home.vertices, objects) then
+		if checkPolyCollisions(self.home.vertices, objects) then
 			self:buildHome()
 		else
-			table.insert(objects["homes"], self.home)
+			local walls = {}
+			for i=1,5 do
+				table.insert(walls,self:buildWall({self.home.vertices[i], self.home.vertices[(i%5)+1]}))
+			end
+			for i, w in ipairs(walls) do
+				table.insert(objects["walls"], w)
+			end
 			self.queue:popRight()
 		end
+	elseif item["key"] == "attack" then
+
 	end
 
 	self.vertices = self:buildVerts()
@@ -213,10 +224,18 @@ function zorp:buildHome()
 	self.home = home:new(x, y, self.r*3)
 	local home = self.home
 	self.home.vertices = buildRegPolygon(home.x, home.y, home.r, 5, getAngle(home.x, home.y, self.core.x, self.core.y))
-	self:goHome()
 	self.queue:pushRight({key = "buildHome", home = self.home})
+	self:goHome()
 end
 
 function zorp:goHome()
 	self:moveTo(self.home.x, self.home.y)
+end
+
+function zorp:buildWall(vertices)
+	if checkPolyCollisions(vertices, objects) then
+		return -1
+	else
+		return wall:new(vertices)
+	end
 end

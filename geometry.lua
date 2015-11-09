@@ -14,11 +14,18 @@ function checkDoubleSquare(x1, y1, r1, x2, y2, r2)
 	y2 - r2/2 < y1 + r1/2
 end
 
-function checkPointSquare(x1, y1, x2, y2, r2)
+function checkPointSquare(x1, y1, x2, y2, r)
 	return x1 < x2 + r/2 and
 	x2 - r/2 < x1 and
 	y1 < y2 + r/2 and
 	y2 - r/2 < y1
+end
+
+function checkPointRect(x1, y1, x2, y2, w, h)
+	return x1 <= x2 + w/2 and
+	x2 - w/2 <= x1 and
+	y1 <= y2 + h/2 and
+	y2 - h/2 < y1
 end
 
 function checkPointCircle(x1, y1, x2, y2, r)
@@ -143,4 +150,16 @@ end
 function round(num, idp)
   local mult = 10^(idp or 0)
   return math.floor(num * mult + 0.5) / mult
+end
+
+function toScale(x, y)
+	return (x - tVec.x) / scale, (y - tVec.y) / scale
+end
+
+function toScaleX(x)
+	return (x - tVec.x) / scale
+end
+
+function toScaleY(y)
+	return (y - tVec.y) / scale
 end

@@ -8,7 +8,7 @@ function home:init(x, y, r)
 end
 
 function home:collide(x, y)
-	return checkPointCircle(x, y, self.x, self.y, self.r)
+	return false
 end
 
 function home:draw()
@@ -20,5 +20,4 @@ function home:draw()
 	end
 
 	love.graphics.polygon("line", drawVerts)
-	love.graphics.circle("line", self.x, self.y, self.r)
 end
