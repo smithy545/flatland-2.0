@@ -14,6 +14,7 @@ function hero:init(x, y, sides, irregular)
 	self.core = {x=0,y=0,r=10}
 	self.mode = "hero"
 	self.hp = 50
+	self.color = {255, 69, 0}
 	if regular then
 		for i=1,5 do
 			self.angles[i] = self.anglesum / sides
@@ -28,7 +29,7 @@ function hero:init(x, y, sides, irregular)
 end
 
 function hero:draw()
-	love.graphics.setColor(255, 69, 0)
+	love.graphics.setColor(self.color)
 	local drawVerts = {}
 	for i, a in pairs(self.vertices) do
 		table.insert(drawVerts, a.x)
@@ -75,6 +76,11 @@ function hero:select()
 	centery = (self.selectBox.y1 + self.selectBox.y2) / 2
 
 	for i, object in ipairs(objects["zorps"]) do
+		if checkPointRect(object.x, object.y, centerx, centery, math.abs(self.selectBox.w), math.abs(self.selectBox.h)) then
+			table.insert(self.selected, object)
+		end
+	end
+	for i, object in ipairs(objects["test"]) do
 		if checkPointRect(object.x, object.y, centerx, centery, math.abs(self.selectBox.w), math.abs(self.selectBox.h)) then
 			table.insert(self.selected, object)
 		end

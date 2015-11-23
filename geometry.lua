@@ -89,6 +89,16 @@ function buildRegPolygon(x, y, r, sides, direction)
 	return vertices
 end
 
+function buildDrawVerts(vertices)
+	local drawVerts = {}
+	for i, a in pairs(vertices) do
+		table.insert(drawVerts, a.x)
+		table.insert(drawVerts, a.y)
+	end
+
+	return drawVerts
+end
+
 -- Returns the angle between the two vectors
 function getAngle(x1, y1, x2, y2)
 	dx = x2 - x1
