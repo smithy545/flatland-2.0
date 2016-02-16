@@ -1,8 +1,9 @@
 zorp = class:new()
 
 function zorp:init(x, y, sides)
-	self.name = "zorp"
-	self.speed = 300
+	self.type = "zorp"
+	self.name = "zorp "..x..y
+	self.speed = 150
 	self.turnSpeed = 10
 	self.damage = 10
 	self.hp = 25
@@ -16,12 +17,15 @@ function zorp:init(x, y, sides)
 		self.shape = love.physics.newPolygonShape(self:drawVerts())
 	end
 	self.fixture = love.physics.newFixture(self.body, self.shape, 1)
+	self.fixture:setMask(1)
 	self.body:setLinearDamping(0.1)
 	self.charging = false
 	self.queue = Queue:new()
+	self.events = Queue:new()
 	self.color = {70, 130, 180}
 	self.personality = {a = 0, d = 0, n = 0}
 	self.thoughts = {}
+	x1,y1,xn1,yn1 = 0,0,0,0
 end
 
 function zorp:draw()
@@ -35,12 +39,12 @@ function zorp:draw()
 		love.graphics.polygon("fill", self:drawVerts())
 	end
 	love.graphics.setColor(0,0,0)
-	love.graphics.line(self.body:getX(), self.body:getY(),
-						self.body:getX() + math.cos(self.body:getAngle())*self.shape:getRadius(),
-						self.body:getY() + math.sin(self.body:getAngle())*self.shape:getRadius())
+	love.graphics.line(self:getX(), self:getY(),
+						self:getX() + math.cos(self.body:getAngle())*self.shape:getRadius(),
+						self:getY() + math.sin(self.body:getAngle())*self.shape:getRadius())
 
-	love.graphics.print(self.name, self.body:getX(), self.body:getY(), self.body:getAngle())
-
+	love.graphics.print(self.fixture:getMask(), self.body:getX(), self.body:getY(), self.body:getAngle())
+	love.graphics.line(x1,y1,x1+50*xn1,y1+50*yn1)
 end
 
 function zorp:move(d)
@@ -59,9 +63,7 @@ end
 
 function zorp:moveTo(x, y, r)
 	if r then
-		local theta = getAngle(x, y, self:getX(), self:getY())
-		x = x + r*math.cos(theta)
-		y = y + r*math.sin(theta)
+		self.queue:pushRight({key = "moveToArea", x = x, y = y, r = r, dir = getAngle})
 	end
 	self.queue:pushRight({key = "moveTo", x = x, y = y, dir = getAngle})
 end
@@ -82,6 +84,7 @@ function zorp:update(dt)
 	if not item then
 		self:think(dt)
 	elseif item["key"] == "moveTo" then
+		world:rayCast(self:getX(), self:getY(), self:getX()+10*math.cos(self:getAngle()),self:getY()+10*math.sin(self:getAngle()), castCallback)
 		local diff = self:getAngle() - item.dir(x, y, item.x, item.y)
 		if math.abs(diff) > self.turnSpeed*dt then
 			if diff > 0 then
@@ -91,6 +94,21 @@ function zorp:update(dt)
 			end
 		else
 			if distance(x, y, item.x, item.y) > 2*self.speed*dt then
+				self:move(self.speed*dt)
+			else
+				self.queue:popRight()
+			end
+		end
+	elseif item["key"] == "moveToArea" then
+		local diff = self:getAngle() - item.dir(x, y, item.x, item.y)
+		if math.abs(diff) > self.turnSpeed*dt then
+			if diff > 0 then
+				self:turn(-self.turnSpeed*dt)
+			else
+				self:turn(self.turnSpeed*dt)
+			end
+		else
+			if distance(x, y, item.x, item.y) > 2*self.speed*dt + item.r then
 				self:move(self.speed*dt)
 			else
 				self.queue:popRight()
@@ -119,6 +137,7 @@ function zorp:update(dt)
 		end
 	elseif item["key"] == "buildWall" then
 		table.insert(objects["walls"], item.w)
+		item.w.fixture:setMask(self.fixture:getMask())
 		self.queue:popRight()
 	elseif item["key"] == "buildPolygon" then
 		self.queue:popRight()
@@ -163,14 +182,14 @@ function zorp:buildHome()
 	x = self.core.x + (2*math.random(0,1)-1)*self.core.r*(2 + 2*math.random())
 	y = self.core.y + (2*math.random(0,1)-1)*self.core.r*(2 + 2*math.random())
 	
-	self.home = home:new(x, y, r*3)
+	self.home = {x=x, y=y, r=r*3}
 	self.home.vertices = buildRegPolygon(x, y, r*3, 5, getAngle(x, y, self.core.x, self.core.y))
 	self.queue:pushRight({key = "buildHome", vertices = self.home.vertices})
 	self:goHome()
 end
 
 function zorp:goHome()
-	self:moveTo(self.home.x, self.home.y, self.core.r)
+	self:moveTo(self.home.x, self.home.y)
 end
 
 function zorp:buildWall(vertices)
@@ -183,6 +202,17 @@ function zorp:attack(target)
 end
 
 function zorp:path(x, y)
+	local stepx, stepy
+	stepx = math.abs(self:getX()-x)/100
+	stepy = math.abs(self:getY()-y)/100
+	pathpoints = {}
+	for itemx=self:getX(),x,stepx do
+		for itemy=self:getY(),y,stepy do
+			table.insert(pathpoints, {itemx, itemy})
+		end
+	end
+
+
 	return nil
 end
 
@@ -204,4 +234,9 @@ end
 
 function zorp:drawVerts()
 	return buildDrawVerts(self.vertices)
+end
+
+function castCallback(fixture, x, y, xn, yn, fraction)
+	x1,y1,xn1,yn1 = x,y,xn,yn
+	return -1
 end

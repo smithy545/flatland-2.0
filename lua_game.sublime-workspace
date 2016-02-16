@@ -1,0 +1,569 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"errory",
+				"errorYMeasuredBin"
+			],
+			[
+				"yMe",
+				"yMeasured"
+			],
+			[
+				"every",
+				"everyotherPhil"
+			],
+			[
+				"yMeasur",
+				"yMeasuredBin"
+			],
+			[
+				"yMeas",
+				"yMeasuredBin"
+			],
+			[
+				"dus",
+				"dustofLList"
+			],
+			[
+				"yM",
+				"yMeasuredBin"
+			],
+			[
+				"sub",
+				"subplot(3,1,1"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "main.lua",
+			"settings":
+			{
+				"buffer_size": 5233,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "",
+			"file": "/C/Users/Philip Smith/Documents/github/psmithy/practice.html",
+			"file_size": -1,
+			"file_write_time": -1,
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/Philip Smith/Documents/github/test/main.lua",
+			"settings":
+			{
+				"buffer_size": 481,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "zorps/peter.lua",
+			"settings":
+			{
+				"buffer_size": 525,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/Lua Love/LuaLove.sublime-build",
+					""
+				],
+				[
+					"Packages/Lua Love/LuaLove.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/Lua Love/LuaLove.sublime-build",
+					"Love2D"
+				],
+				[
+					"Packages/Lua Love/LuaLove.sublime-build",
+					"ldoc: File"
+				],
+				[
+					"Packages/Lua Love/LuaLove.sublime-build",
+					"ldoc: Project"
+				]
+			],
+			[
+				"Packages/Lua Love/LuaLove.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				]
+			],
+			[
+				"Packages/Python/Python.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/User/Lua2.sublime-build",
+					""
+				],
+				[
+					"Packages/User/Lua2.sublime-build",
+					"Love2D"
+				],
+				[
+					"Packages/User/Lua2.sublime-build",
+					"ldoc: File"
+				],
+				[
+					"Packages/User/Lua2.sublime-build",
+					"ldoc: Project"
+				]
+			],
+			[
+				"Packages/User/Lua2.sublime-build",
+				"Love2D"
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 350.0,
+		"last_filter": "vmen",
+		"selected_items":
+		[
+			[
+				"vmen",
+				"View: Toggle Menu"
+			],
+			[
+				"Package Control: rem",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: dis",
+				"Package Control: Disable Package"
+			],
+			[
+				"lua",
+				"Build With: LuaLove - Run"
+			],
+			[
+				"Package Control: in",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: remove",
+				"Package Control: Remove Repository"
+			],
+			[
+				"Package Control: install",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: inst",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control: ins",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: instal",
+				"Package Control: Install Package"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 416.0
+	},
+	"console":
+	{
+		"height": 94.0,
+		"history":
+		[
+			"import numpy",
+			"import np",
+			"np.ceil(1)",
+			"99/20",
+			"99 - 0",
+			"if 1==1:",
+			"if",
+			"if x > len(a) or a[x] == 2: print a",
+			"if x > len(a) or a[x] == 2: print a;",
+			"if x > len(a) or a[x] == 2:\\",
+			"if x > len(a) or a[x] == 2: print a",
+			"if x > len(a) or a[x] == 2:",
+			"a = [1,2,3]",
+			"x = 3",
+			"a[0:4]",
+			"a = [1,2,3,4]",
+			"average()",
+			"avg",
+			"import matplotlib",
+			"python -c 'import matplotlib'",
+			"fds",
+			"python -u",
+			"print(sys.version)",
+			"import sys",
+			"print(sys.version)",
+			"python",
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/Users/Philip Smith/Documents/github/lua_game",
+		"/C/Users/Philip Smith/Documents/github/lua_game/zorps"
+	],
+	"file_history":
+	[
+	],
+	"find":
+	{
+		"height": 23.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"print",
+			"collide",
+			"name",
+			"nodes",
+			"cities",
+			"getRadius",
+			"self.dir",
+			"move",
+			"hero",
+			"scroll",
+			"color",
+			"buildHome",
+			"home:init",
+			"temp",
+			"print",
+			"end",
+			"checkCollision",
+			"size",
+			"__baseclass",
+			"_draw",
+			"tx",
+			"tVec",
+			"ty",
+			"tx",
+			"draw",
+			":new",
+			"objects",
+			"update",
+			"mario:new",
+			"mario",
+			"bowser:",
+			"bowser.",
+			"mario =",
+			"bowser:init",
+			"init",
+			"bowser =",
+			"bowser",
+			"bowser =",
+			"bowser",
+			"entity",
+			"love.window.setMode",
+			"love.graphics.setMode",
+			"load",
+			"mario",
+			"mario:",
+			"mario:update",
+			"update",
+			"coro",
+			"corou",
+			"coroutine",
+			"	\n"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"cities",
+			"nodes",
+			"r",
+			"tVec.y",
+			"tVec.x"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "main.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5233,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1212,
+								1212
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/Users/Philip Smith/Documents/github/psmithy/practice.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/C/Users/Philip Smith/Documents/github/test/main.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 481,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								180,
+								180
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "zorps/peter.lua",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 525,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 167.0
+	},
+	"output.find_results":
+	{
+		"height": 118.0
+	},
+	"pinned_build_system": "Packages/User/lua_game.sublime-build",
+	"project": "lua_game.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"LAMDA Data BB"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"C:\\Users\\Philip Smith\\Documents\\github\\test\\test.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": false,
+	"side_bar_visible": true,
+	"side_bar_width": 152.0,
+	"status_bar_visible": false,
+	"template_settings":
+	{
+	}
+}

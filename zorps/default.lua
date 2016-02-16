@@ -1,5 +1,4 @@
 return function(self, dt)
-	print(self.name, " is thinking")
 	if not self.core then
 		local d
 		for i, core in ipairs(objects["cores"]) do

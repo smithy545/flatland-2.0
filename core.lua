@@ -1,7 +1,7 @@
 core = class:new()
 
 function core:init(x, y, colori, coloro)
-	self.name = "core"
+	self.type = "core"
 	self.r = 50
 	self.x = x
 	self.y = y

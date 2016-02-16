@@ -1,7 +1,7 @@
 hero = zorp:inherit()
 
 function hero:init(x, y, sides, irregular)
-	self.name = "hero"
+	self.type = "hero"
 	self.anglesum = 180*(sides - 2)
 	self.regular = not irregular
 	self.angles = {}
@@ -52,12 +52,6 @@ function hero:update(dt)
 		elseif love.mouse.isDown("r") then
 			self:move(-1*self.speed*dt)
 		end
-	else
-		if love.mouse.isDown("l") then
-			self.selectBox.x2, self.selectBox.y2 = mousex, mousey
-			self.selectBox.w = mousex - self.selectBox.x1
-			self.selectBox.h = mousey - self.selectBox.y1
-		end
 	end
 
 	self.vertices = buildRegPolygon(self.x, self.y, self.r, self.n, self.dir)
@@ -67,23 +61,4 @@ function hero:setDir(phi)
 	if not self:checkPolyCollision(buildRegPolygon(self.x, self.y, self.r, self.n, phi), objects) then
 		self.dir = phi
 	end
-end
-
-function hero:select()
-	local centerx, centery
-	self.selected = {}
-	centerx = (self.selectBox.x1 + self.selectBox.x2) / 2
-	centery = (self.selectBox.y1 + self.selectBox.y2) / 2
-
-	for i, object in ipairs(objects["zorps"]) do
-		if checkPointRect(object.x, object.y, centerx, centery, math.abs(self.selectBox.w), math.abs(self.selectBox.h)) then
-			table.insert(self.selected, object)
-		end
-	end
-	for i, object in ipairs(objects["test"]) do
-		if checkPointRect(object.x, object.y, centerx, centery, math.abs(self.selectBox.w), math.abs(self.selectBox.h)) then
-			table.insert(self.selected, object)
-		end
-	end
-	self.selectBox = nil
 end

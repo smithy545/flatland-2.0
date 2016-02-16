@@ -19,4 +19,5 @@ function(self)
 	self.color = {255, 0, 0}
 	self.personality = {a = 0, d = 1, n = 0}
 	self.n = 4
+	self.fixture:setMask(2)
 end

@@ -5,5 +5,5 @@ function(self)
 	self.color = {255, 255, 0}
 	self.body:setX(0)
 	self.body:setY(0)
-	self:turn(math.pi / 4)
+	self.fixture:setMask(3)
 end
